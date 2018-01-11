@@ -12,9 +12,15 @@
        
      
     </head>
-    <body >
-          
-            <div id="wPaint" style="background-color: #CACACA;" ></div>
+    <body style="background-color: grey;">
+            <nav class="navbar navbar-inverse navbar-fixed-top" style="background-color: #205081;">
+                <div class="btn-group">
+                  <button id="rect" type="button" class="btn btn-default"><img src="images/rectangle.png"></button>
+                  <button id="circle" type="button" class="btn btn-default"><img src="images/circle.png"></button>
+                  <button id="line" type="button" class="btn btn-default"><img src="images/diagonal-line.png"></button>
+                </div>
+            </nav>
+            <canvas id="image-canvas"></canvas>
             <input id="canvas-image" type="hidden" value="">
             <script src="js/jquery.min.js" type="text/javascript"></script>
             <script src="js/bootstrap.min.js" type="text/javascript" ></script>
