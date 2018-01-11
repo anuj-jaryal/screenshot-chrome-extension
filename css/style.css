@@ -1,0 +1,7 @@
+.form-wrapper{
+    padding:10px;
+    height: 100vh;
+}
+.error{
+    color:red;
+}
