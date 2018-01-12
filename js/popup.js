@@ -1,175 +1,168 @@
-$(document).ready(function(){
+window.onload=function(){
     chrome.storage.local.get(['canvasImg'],function(res){
         var canvas = document.getElementById("image-canvas");
         var ctx = canvas.getContext("2d");
-
-        $("#canvas-image").val(res.canvasImg);
-        var img = new Image();
+        inputBase64=document.getElementById('inputbase64');
+        inputBase64.value=res.canvasImg;
+        img = new Image();
         img.src=res.canvasImg;
         img.onload=function(){
             var imgWidth=img.naturalWidth,
                 imgHeight=img.naturalHeight;
-                $('#image-canvas').attr('height',imgHeight).attr('width',imgWidth);
-             ctx.drawImage(img, 0, 0);
+                canvas.setAttribute('height',imgHeight);
+                canvas.setAttribute('width',imgWidth);
+                ctx.drawImage(img, 0, 0);
         }
 
     });
 
- });
 
-function CanvasDraw(canvas){
-    this.strokeStyle='red';
-    this.lineWidth=2;
-    this.canvas=canvas;
-    console.log(this.canvas.offsetLeft);
-    this.ctx =this.canvas.getContext("2d");
+    var rectangle = document.getElementById('rect');
+    rectangle.addEventListener('click',function(){
+        var prevRect={};
+        var canvas = document.getElementById('image-canvas'),
+        ctx = canvas.getContext('2d'),
+        rect = {},
+        drag = false;
 
-    var shape='circle';
-    var startDraw=false;
-    var startX=0;
-    var starY=0;
-    var mouseX=0;
-    var mouseY=0;
-    var offsetX = 0;
-    var offsetY = 0;
-
- 
-
-    this.drawShape=function(e){
-
-        if(this.startDraw){
-            switch(this.shape){
-                case 'rect':
-                    this.drawRectangle(e);
-                    break;
-                case 'circle':
-                    this.drawCircle(e);
-                    break;
-                case 'line':
-                    this.drawLine(e);
-                    break;
-                default:
-                    break;
-            }
-        }else{
-            console.log('enable start draw first');
+        function init() {  
+              canvas.addEventListener('mousedown', mouseDown, false);
+              canvas.addEventListener('mouseup', mouseUp, false);
+              canvas.addEventListener('mousemove', mouseMove, false);
         }
-    }
 
-    this.enableStartDraw=function(){
-        this.startDraw=true;
-    }
+        function mouseDown(e) {
+          rect.startX = e.pageX - this.offsetLeft;
+          rect.startY = e.pageY - this.offsetTop;
+          drag = true;
+        }
 
-    this.disableStartDraw=function(){
-        this.startDraw=false;
-    }
+        function mouseUp() {
 
-    this.setShape=function(shape){
-        this.shape=shape;
-    }
+          drag = false;
+          img.src=canvas.toDataURL('image/png');
+          ctx.clearRect(0,0,canvas.width,canvas.height);
+          
+        }
 
-    this.getShape=function(){
-        return this.shape;
-    }
+        function mouseMove(e) {
+          if (drag) {
+            rect.w = (e.pageX - this.offsetLeft) - rect.startX;
+            rect.h = (e.pageY - this.offsetTop) - rect.startY ;
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            ctx.drawImage(img, 0, 0);
+            draw();
+          }
+        }
 
-    this.setMouseCord=function(e){
-        this.mouseX = parseInt(e.clientX - this.offsetX);
-        this.mouseY = parseInt(e.clientY - this.offsetY);
-    }
+        function draw() {
+          ctx.beginPath();
+          ctx.rect(rect.startX, rect.startY, rect.w, rect.h);
+          ctx.lineWidth=6;
+          ctx.stroke();
+        }
 
-    this.setOffsetCord=function(e){
-        this.offsetX = this.canvas.offsetLeft;
-        this.offsetY = this.canvas.offsetTop;
-    }
+        init();
 
-    this.setStartCord=function(){
-        this.startX=this.mouseX;
-        this.startY=this.mouseY;
-    }
+    });// end of  rectangle 
 
-    this.drawRectangle=function(e){
-        console.log('rectangle drawn');
-       
-        console.log('oX :'+this.offsetX+' oY:'+this.offsetY);
-        
-        console.log('mX :'+this.mouseX+' mY:'+this.mouseY);
-        
-        console.log('sX :'+this.startX+' sY:'+this.startY);
-    
-        this.ctx.lineWidth=this.lineWidth;
-        this.ctx.strokeStyle=this.strokeStyle;
-        this.ctx.rect(this.startX, this.startY, this.mouseX-this.startX, this.mouseY-this.startY); 
-        this.ctx.fill();
-   
-        
-    }
-
-
-    this.drawCircle=function(e){
-        console.log('circle drawn');
-        this.ctx.beginPath();
-        this.ctx.arc(95,50,40,0,2*Math.PI);
-        this.ctx.stroke();
-    }
-
-    this.drawLine=function(){
-        console.log('line drawn');
-        this.ctx.beginPath();
-        this.ctx.moveTo(0,0);
-        this.ctx.lineTo(200,100);
-        this.ctx.stroke();
-    }
-    this.setStroke=function(){
-        this.ctx.stroke();
-    }
-
-    this.setBeginPath=function(){
-        this.ctx.beginPath();
-    }
-}
-
-window.onload=function(){
-    var canvas = document.getElementById("image-canvas");
-    var rect      = document.getElementById('rect');
-    var circle    = document.getElementById('circle');
-    var line      = document.getElementById('line');
-    var cd = new CanvasDraw(canvas);
-
-    rect.addEventListener('click',function(){
-        cd.setShape('rect');
-        canvas.style.cursor="crosshair";
-        console.log(cd.getShape());
-    });
-
-    circle.addEventListener('click',function(){
-        cd.setShape('circle');
-        console.log(cd.getShape());
-    });
-
+    //start of line
+    var line=document.getElementById('line');
     line.addEventListener('click',function(){
-        cd.setShape('line');
-        console.log(cd.getShape());
-    });
 
-    canvas.addEventListener('mousedown',function(e){
-        cd.setOffsetCord(e);
-        cd.setMouseCord(e);
-        cd.setStartCord(e);
-        cd.enableStartDraw();
-        cd.setBeginPath();
-        cd.drawShape(e);
-    });
+        var canvas = document.getElementById("image-canvas");
+        var ctx = canvas.getContext("2d");
+        var canvasOffset = $("#image-canvas").offset();
+        var offsetX = canvasOffset.left;
+        var offsetY = canvasOffset.top;
+        var storedLines = [];
+        var startX = 0;
+        var startY = 0;
+        var isDown;
 
-    canvas.addEventListener('mouseup',function(e){
-        cd.setMouseCord(e);
-        cd.drawShape(e);
-        cd.setStroke();
-        cd.disableStartDraw();
-    });
+        ctx.strokeStyle = "orange";
+        ctx.lineWidth = 3;
 
-     canvas.addEventListener('mousemove',function(e){
-        cd.setMouseCord(e);
-        cd.drawShape(e);
-        //cd.draw();
-    });
-}
+        $("#image-canvas").mousedown(function (e) {
+            handleMouseDown(e);
+        });
+        $("#image-canvas").mousemove(function (e) {
+            handleMouseMove(e);
+        });
+        $("#image-canvas").mouseup(function (e) {
+            handleMouseUp(e);
+        });
+
+        $("#clear").click(function () {
+            storedLines.length = 0;
+            redrawStoredLines();
+        });
+
+        function handleMouseDown(e) {
+            var mouseX = parseInt(e.clientX - offsetX);
+            var mouseY = parseInt(e.clientY - offsetY);
+
+            isDown = true;
+            startX = mouseX;
+            startY = mouseY;
+
+        }
+
+        function handleMouseMove(e) {
+
+            if (!isDown) {
+                return;
+            }
+
+            redrawStoredLines();
+
+            var mouseX = parseInt(e.clientX - offsetX);
+            var mouseY = parseInt(e.clientY - offsetY);
+
+            // draw the current line
+            ctx.beginPath();
+            ctx.moveTo(startX, startY);
+            ctx.lineTo(mouseX, mouseY);
+            ctx.stroke()
+
+        }
+
+
+        function handleMouseUp(e) {
+
+            isDown = false;
+
+            var mouseX = parseInt(e.clientX - offsetX);
+            var mouseY = parseInt(e.clientY - offsetY);
+
+            storedLines.push({
+                x1: startX,
+                y1: startY,
+                x2: mouseX,
+                y2: mouseY
+            });
+
+            redrawStoredLines();
+
+        }
+
+
+        function redrawStoredLines() {
+
+            ctx.clearRect(0,0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0);
+            if (storedLines.length == 0) {
+                return;
+            }
+
+            // redraw each stored line
+            for (var i = 0; i < storedLines.length; i++) {
+                ctx.beginPath();
+                ctx.moveTo(storedLines[i].x1, storedLines[i].y1);
+                ctx.lineTo(storedLines[i].x2, storedLines[i].y2);
+                ctx.stroke();
+            }
+        }
+
+    });//end of line
+ };// end of window onload

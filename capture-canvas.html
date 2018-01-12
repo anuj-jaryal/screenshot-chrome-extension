@@ -18,24 +18,17 @@
                   <button id="rect" type="button" class="btn btn-default"><img src="images/rectangle.png"></button>
                   <button id="circle" type="button" class="btn btn-default"><img src="images/circle.png"></button>
                   <button id="line" type="button" class="btn btn-default"><img src="images/diagonal-line.png"></button>
+                  <button id="pencil" type="button" class="btn btn-default"><img src="images/pencil-edit-button.png"></button>
+                  <button id="text" type="button" class="btn btn-default"><img src="images/text-height-adjustment.png"></button>
+                  <button id="crop" type="button" class="btn btn-default"><img src="images/crop-symbol.png"></button>
                 </div>
             </nav>
-            <canvas id="image-canvas"></canvas>
-            <input id="canvas-image" type="hidden" value="">
+            <div id='canvas-wrapper'>
+                <canvas id="image-canvas"></canvas>
+                <input id="inputbase64" type="hidden" value="">
+            </div>
             <script src="js/jquery.min.js" type="text/javascript"></script>
-            <script src="js/bootstrap.min.js" type="text/javascript" ></script>
-            <script src="js/jquery1.9.1.min.js" type="text/javascript" ></script>
-            <script type="text/javascript" src="js/jquery.ui.core.min.js"></script>
-            <script type="text/javascript" src="js/jquery.ui.widget.min.js"></script>
-            <script type="text/javascript" src="js/jquery.ui.mouse.min.js"></script>
-            <script type="text/javascript" src="js/jquery.ui.draggable.min.js"></script>
-            <script type="text/javascript" src="js/wColorPicker.min.js"></script>
-            <script type="text/javascript" src="js/wPaint.min.js"></script><br type="_moz">
-            <script type="text/javascript" src="plugins/main/src/wPaint.menu.main.js"></script>
-            <script type="text/javascript" src="plugins/text/src/wPaint.menu.text.js"></script>
-            <script type="text/javascript" src="plugins/shapes/src/wPaint.menu.main.shapes.js"></script>
-            <script type="text/javascript" src="plugins/file/src/wPaint.menu.main.file.js"></script>
-            <script src="js/cropper.js" type="text/javascript"></script>
+            <script src="js/canvas.js" type="text/javascript"></script>
             <script src="js/popup.js" type="text/javascript" > </script>
 
     </body>
