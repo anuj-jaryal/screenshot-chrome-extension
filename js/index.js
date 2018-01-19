@@ -118,13 +118,14 @@ function drawCrop(position){
 function drawPaint(position){
     context.lineWidth=lineWidth;
     context.beginPath();
-    context.lineTo(dragStartLocation.x, dragStartLocation.y);
+    context.lineTo(position.x, position.y);
     context.stroke();
     context.beginPath();
     context.arc(position.x,position.y,lineWidth/2, 0, Math.PI*2);
     context.fill();
     context.beginPath();
     context.moveTo(position.x,position.y);
+    context.beginPath();
 
 }
 
@@ -160,31 +161,55 @@ function drawText(position){
     context.font = "26px Arial";
     canvasText.style.display='block';
     canvasText.style.left=(position.x+10)+'px';
-    canvasText.style.top=(position.y+55)+'px';
-    canvasText.setAttribute('autofocus',true);
+    canvasText.style.top=(position.y+50)+'px';
+    canvasText.focus();
+    canvasTextCoords=position;
 
     //context.strokeText(text,position.x,position.y);
 }
 
-function wrapText(context, text, x, y, maxWidth, lineHeight) {
-        text=document.getElementById('canvas-text').value;
-        var words = text.split(' ');
-        var line = '';
-
-        for(var n = 0; n < words.length; n++) {
-          var testLine = line + words[n] + ' ';
-          var metrics = context.measureText(testLine);
-          var testWidth = metrics.width;
-          if (testWidth > maxWidth && n > 0) {
-            context.fillText(line, x, y);
-            line = words[n] + ' ';
-            y += lineHeight;
-          }
-          else {
-            line = testLine;
-          }
+function checkText(){
+    console.log(context.measureText(this.value).width);
+    var lines=this.value.split('\n');
+    var bigLine=0;
+    var longText='';
+    for(var i=0; i<lines.length; i++) {
+        if(lines[i].length>bigLine){
+            bigLine=lines[i].length;
+            longText=lines[i];
         }
-        context.fillText(line, x, y);
+    }
+
+
+    if(Number(context.measureText(longText).width*2) >50){
+        this.style.width=Number((context.measureText(longText).width*2)-8)+'px';
+    }
+
+    this.style.height = this.scrollHeight+'px';
+
+    writeText=this.value;
+
+
+}
+
+
+function writePreviousText() {
+    var lineHeight = 26;
+    if(writeText.length>0){
+        
+        writeText=writeText.trim();
+        var lines = writeText.split('\n');
+        for(var i=0; i<lines.length; i++){
+
+            context.fillText(lines[i], Number(canvasTextCoords.x+10), canvasTextCoords.y+15+(i*lineHeight));
+            fillOrStroke();
+        }
+        canvasText.value='';
+        canvasText.style.width='50px';
+        canvasText.style.height='36px';
+
+        writeText='';
+    }
 }
 
 
@@ -272,24 +297,20 @@ function triggerEvent(el, type){
     }
 }
 
-function writePreviousText(){
-    if(writeText.length>0){
-        context.strokeText(writeText,canvasTextCoords.x,canvasTextCoords.y);
-    }
-}
+
 
 function dragStart(event) {
     console.log('canvas1 drage start');
     dragging = true;
     dragStartLocation = getCanvasCoordinates(event);
-    console.log('canvas1:',dragStartLocation);
-    console.log('canvas2:',getCropCanvasCoordinates(event));
+
     if(shape==="pencil"){
         addClick(dragStartLocation.x,dragStartLocation.y);
     }
     if(shape=="text"){
+       // canvasTextCoords=dragStartLocation;
+        canvasText.setAttribute('autofocus',false);
         writePreviousText();
-        canvasTextCoords=dragStartLocation;
         drawText(dragStartLocation);
     }
 
@@ -393,11 +414,7 @@ function fillInput(event){
     document.getElementById('canvas-text').value+=event.key;
 }
 
-function checkText(){
-    console.log(context.measureText(this.value).width);
-    writeText=this.value;
-    this.style.width=context.measureText(this.value).width+'px';
-}
+
 
 function init() {
     canvas = document.getElementById("image-canvas");
