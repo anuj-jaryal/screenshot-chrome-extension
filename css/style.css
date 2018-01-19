@@ -9,6 +9,14 @@
     margin:55px 10px 5px 10px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
+#cropFrame{
+  position: absolute;
+  top:0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin:55px 10px 5px 10px;
+}
 .btn-group{
     left: 50%;
     top:5px;
@@ -17,6 +25,24 @@
     display: inline;
     width:3%;
 }
+
+#hole {
+  position: absolute;
+  clip: rect(210px, 260px, 170px, 60px);
+  border: 1px solid black;
+}
+
+.textCanvas{
+  position: absolute;
+  top:0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width:33px;
+  height: 31px ;
+  background-color: transparent;
+}
+
 
 
 input[type=range] {

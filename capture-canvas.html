@@ -11,7 +11,7 @@
        
      
     </head>
-    <body style="background-color: grey;">
+    <body id="canvas-page" style="background-color: grey;">
             <nav class="navbar navbar-inverse navbar-fixed-top" style="background-color: #205081;">
                <!--  <div class="btn-group"> -->
                   <button id="rect" type="button" class="btn btn-default shapes" title="Rectangle"><img src="images/rectangle.png"></button>
@@ -25,11 +25,14 @@
                   <button id="clear" type="button" class="btn btn-default" title="Clear"><img src="images/clear-button.png"></button>
              <!--    </div> -->
             </nav>
-            <div id='canvas-wrapper'>
-                <canvas id="image-canvas"></canvas>
+            <div id='canvas-wrapper' class="">
+                <div id="hole" ></div>
+
+                <canvas id="image-canvas" ></canvas>
+                <canvas id="cropFrame" style="display: none;"></canvas>
                 <input id="inputbase64" type="hidden" value="">
                 <input type='hidden' id='shape' value="">
-                <input type="hidden" id="canvas-text" value="">
+                <textarea id="canvas-text" class="textCanvas" style="display: none;"></textarea>
             </div>
             <script src="js/jquery.min.js" type="text/javascript"></script>
             <script src="js/cropper.js" type="text/javascript" > </script>
