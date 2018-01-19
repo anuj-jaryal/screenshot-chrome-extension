@@ -10,6 +10,9 @@ var canvas,
     dragStartLocation,
     docrop=false,
     istakensnapshot=false,
+    canvasText,
+    canvasTextCoords={},
+    writeText='',
     snapshot,
     cropSnapshot;
 
@@ -153,9 +156,8 @@ function addClick(x ,y ,dragging){
 }
 
 function drawText(position){
-    var canvasText;
-    context.font = "30px Arial";
-    canvasText=document.getElementById('canvas-text');
+
+    context.font = "26px Arial";
     canvasText.style.display='block';
     canvasText.style.left=(position.x+10)+'px';
     canvasText.style.top=(position.y+55)+'px';
@@ -270,6 +272,12 @@ function triggerEvent(el, type){
     }
 }
 
+function writePreviousText(){
+    if(writeText.length>0){
+        context.strokeText(writeText,canvasTextCoords.x,canvasTextCoords.y);
+    }
+}
+
 function dragStart(event) {
     console.log('canvas1 drage start');
     dragging = true;
@@ -280,6 +288,8 @@ function dragStart(event) {
         addClick(dragStartLocation.x,dragStartLocation.y);
     }
     if(shape=="text"){
+        writePreviousText();
+        canvasTextCoords=dragStartLocation;
         drawText(dragStartLocation);
     }
 
@@ -383,6 +393,12 @@ function fillInput(event){
     document.getElementById('canvas-text').value+=event.key;
 }
 
+function checkText(){
+    console.log(context.measureText(this.value).width);
+    writeText=this.value;
+    this.style.width=context.measureText(this.value).width+'px';
+}
+
 function init() {
     canvas = document.getElementById("image-canvas");
     cropCanvas=document.getElementById('cropFrame');
@@ -393,6 +409,7 @@ function init() {
         strokeColor = document.getElementById("strokeColor"),
         canvasColor = document.getElementById("backgroundColor");
         shapes=document.querySelectorAll('.shapes');
+        canvasText=document.getElementById('canvas-text');
 
 
    // context.strokeStyle = strokeColor.value;
@@ -407,6 +424,8 @@ function init() {
     cropCanvas.addEventListener('mousedown', cropDragStart, false);
     cropCanvas.addEventListener('mousemove', cropDrag, false);
     cropCanvas.addEventListener('mouseup', cropDragStop, false);
+
+    canvasText.addEventListener('keyup',checkText,false);
     //lineWidth.addEventListener("input", changeLineWidth, false);
    // fillColor.addEventListener("input", changeFillStyle, false);
     //strokeColor.addEventListener("input", changeStrokeStyle, false);

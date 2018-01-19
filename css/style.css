@@ -38,9 +38,11 @@
   bottom: 0;
   left: 0;
   right: 0;
-  width:33px;
+  border-radius: 5px;
+ /* width:33px;
   height: 31px ;
-  background-color: transparent;
+  font-size: 26px;
+  background-color: transparent;*/
 }
 
 
